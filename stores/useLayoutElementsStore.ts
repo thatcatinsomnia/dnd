@@ -15,9 +15,13 @@ export const useLayoutElementsStore = create<LayoutDataState>()(() => ({
     elements: []
 }));
 
-export const pushNewLayoutElement = (newElement: LayoutElement) => useLayoutElementsStore.setState(state => ({
-    elements: [...state.elements, newElement]
+export const setLayoutElements = (layoutElements: LayoutElement[]) => useLayoutElementsStore.setState(state => ({
+    elements: layoutElements
 }));
+
+export const pushNewLayoutElement = (newElement: LayoutElement) => useLayoutElementsStore.setState(state => {
+    return { elements: [...state.elements, newElement]}
+});
 
 export const updateLayoutElementById = (id: string, data: ReactNode) => useLayoutElementsStore.setState(state => {
     const updatedElements = state.elements.map(element => {

@@ -40,7 +40,7 @@ export default function TextPreview({ id, children }: {
             element,
 
             getInitialData: (data) => {
-                return { type: 'text', id: id };
+                return { type: 'text', id: id, children };
             },
             // you can pass your custom data here, otherwise delete this function
             // getInitialData: () => {
@@ -71,7 +71,8 @@ export default function TextPreview({ id, children }: {
 
             // return the object data you want to attach to drop target
             getData: ({ input, element }) => {
-                return attachClosestEdge({}, { input, element, allowedEdges: ['top', 'bottom'] })
+                const data = { type: 'text', id };
+                return attachClosestEdge(data, { input, element, allowedEdges: ['top', 'bottom'] })
             },
 
             // prevent drop on self

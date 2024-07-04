@@ -53,7 +53,6 @@ const useDraggable = ({
 
             // trigger once element enter 
             onDragEnter: ({ self }) => {
-                console.log('on drag enter')
                 const edge = extractClosestEdge(self.data);
                 setClosestEdge(edge);
                 setState({ type: 'is-dragging-over' });
@@ -61,13 +60,11 @@ const useDraggable = ({
 
             // invoke when leave avaliable area
             onDragLeave: () => {
-                 console.log('on drag leave');
                  setState(idle);
             },
 
             // invoke when drop on avaliable position
             onDrop: () => {
-                console.log('on drop');
                 //set your layout
                 setState(idle);
             }

@@ -22,7 +22,7 @@ export default function LayoutPreview() {
 
     return (
         <>
-            {layoutElements.map(layout => {
+            {layoutElements.map((layout, i) => {
                const Component = previewComponents[layout.type];
 
                 if (!Component) {
