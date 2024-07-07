@@ -6,6 +6,7 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
 import { TypeIcon } from 'lucide-react';
+import DraggableComponent from '#/components/DraggableComponent';
 import ComponentName from '#/components/ComponentName';
 
 type DraggableState = {
@@ -55,14 +56,11 @@ export default function TextComponent() {
     }, []);
 
     return (
-        <span
-            ref={ref}
-            className="p-4 flex flex-col items-center gap-2 bg-slate-700 rounded cursor-grab"
-        >
-            <TypeIcon size={20} className="pointer-events-none"/>
+        <DraggableComponent containerRef={ref}>
+            <TypeIcon size={20} className="pointer-events-none" />
             <ComponentName>Text</ComponentName>
             {dragState.type === 'preview' && dragState.container && createPortal(<DragPreviewText />, dragState.container)}
-        </span>
+        </DraggableComponent>
     );
 }
 
