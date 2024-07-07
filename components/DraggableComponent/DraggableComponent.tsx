@@ -1,8 +1,8 @@
-import type { ReactNode, LegacyRef } from 'react';
+import type { ReactNode, RefObject } from 'react';
 
 export default function DraggableComponent({ children, containerRef }: { 
     children: ReactNode;
-    containerRef?: LegacyRef<HTMLDivElement>; 
+    containerRef?: RefObject<HTMLDivElement>; 
 }) {
     return (
         <div
