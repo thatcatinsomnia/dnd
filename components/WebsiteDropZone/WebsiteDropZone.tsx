@@ -44,10 +44,12 @@ export default function WebsiteBuilder() {
                     return;
                 }
 
-                // the element drag, it can be new layout from sidebar or exist one
-                const layoutElement = source.data as LayoutElement;
-                const existElementIndex = layoutElements.findIndex(el => el.id === layoutElement.id);
+                // the element dragging, it can be new elemnet from sidebar or exist one
+                const existElementIndex = layoutElements.findIndex(el => el.id === source.data.id);
                 const isNewElement = existElementIndex === -1;
+                
+                // NOTE: not sure if there is other way to sync data with ui
+                const layoutElement = isNewElement ? (source.data as LayoutElement) : layoutElements[existElementIndex];
 
                 // drop element on dropzone, just push to array
                 if (isNewElement && location.current.dropTargets.length === 1) {
