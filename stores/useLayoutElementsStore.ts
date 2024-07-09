@@ -1,42 +1,67 @@
-import type { ReactNode } from 'react';
 import { create } from 'zustand';
 
-export type LayoutElement = {
+export type TextComponent = {
     id: string;
-    type: string;
-    children: ReactNode
+    type: 'text';
+    content: string;
 };
 
-type LayoutDataState = {
+export type ColumnComponent = {
+    id: string;
+    type: 'column';
+    columns: number;
+    content: LayoutElement[];
+};
+
+export type BoxComponent = {
+    id: string;
+    type: 'box',
+    content: LayoutElement[];
+};
+
+export type LayoutElement = TextComponent | ColumnComponent | BoxComponent;
+
+type LayoutElementsStore = {
     elements: LayoutElement[];
 };
 
-export const useLayoutElementsStore = create<LayoutDataState>()(() => ({
+type UpdateData<T extends LayoutElement> = Omit<Partial<T>, 'type' | 'id'>;
+
+export const useLayoutElementsStore = create<LayoutElementsStore>()(() => ({
     elements: []
 }));
 
-export const setLayoutElements = (layoutElements: LayoutElement[]) => useLayoutElementsStore.setState(state => ({
-    elements: layoutElements
-}));
+export function setLayoutElements(layoutElements: LayoutElement[]) {
+    useLayoutElementsStore.setState(state => ({
+        elements: layoutElements
+    }));
+}
 
-export const pushNewLayoutElement = (newElement: LayoutElement) => useLayoutElementsStore.setState(state => {
-    return { elements: [...state.elements, newElement]}
-});
-
-export const updateLayoutElementById = (id: string, data: ReactNode) => useLayoutElementsStore.setState(state => {
-    const updatedElements = state.elements.map(element => {
-        if (element.id === id) {
-            return {
-                ...element,
-                children: data
-            };
-        }
-
-        return element;
+export function pushNewLayoutElement(newElement: LayoutElement) {
+    useLayoutElementsStore.setState(state => {
+        return { elements: [...state.elements, newElement]}
     });
+}
 
-    return {
-        elements: updatedElements
-    };
-});
+export function updateLayoutElementById<T extends LayoutElement>(
+    id: string, 
+    data: UpdateData<T>
+) {
+    useLayoutElementsStore.setState(state => {
+        const updatedElements = state.elements.map(element => {
+            if (element.id === id) {
+                return {
+                    ...element,
+                    ...data
+                };
+            }
+
+            return element;
+        });
+
+        return {
+            elements: updatedElements
+        };
+    });
+}
 

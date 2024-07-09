@@ -7,11 +7,6 @@ import DraggableComponent from '#/components/DraggableComponent';
 import ComponentName from '#/components/ComponentName';
 import useDraggableComponent from '#/hooks/useDraggableComponent';
 
-const initialData = {
-    type: 'text',
-    children: 'Default Text'
-};
-
 function DragPreviewText() {
     return <TypeIcon className="p-2 size-10 bg-slate-800 rounded" />
 }
@@ -20,7 +15,7 @@ export default function TextComponent() {
     const ref = useRef(null);
     const dragState = useDraggableComponent({ 
         ref,
-        initialData
+        type: 'text'
     });
 
     return (

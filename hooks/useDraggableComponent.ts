@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/closest-edge';
-import type { LayoutElement } from '#/stores/useLayoutElementsStore';
+import type { AvailableComponentType } from '#/helper/componentRegistry';
 import { useState, useEffect } from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
@@ -15,15 +15,36 @@ type PxString = `${number}px`;
 
 type Params = {
     ref: RefObject<HTMLDivElement> | undefined;
-    initialData: Omit<LayoutElement, 'id'>;
+    type: AvailableComponentType;
     previewOffset?: { x: PxString, y: PxString };
 };
 
 const idle = { type: 'idle' } as const;
 
+function generateInitialData(type: AvailableComponentType) {
+    if (type === 'column') {
+        return {
+            id: crypto.randomUUID(),
+            type: 'column',
+            columns: 2,
+            content: [{ id: crypto.randomUUID(), type: 'box' }, { id: crypto.randomUUID(), type: 'box' }]
+        };
+    }
+
+    if (type === 'text') {
+        return {
+            id: crypto.randomUUID(),
+            type: 'text',
+            content: 'Default Text'
+        };
+    }
+
+    throw Error('unhandle compoennt type when generate initial data');
+}
+
 const useDraggableComponent = ({ 
     ref, 
-    initialData, 
+    type,
     previewOffset = { x: '8px', y: '16px' } 
 }: Params) => {
     const [dragState, setDragState] = useState<DraggableState>(idle);
@@ -38,10 +59,7 @@ const useDraggableComponent = ({
         const cleanup = draggable({ 
             element,
             getInitialData: () => {
-                return {
-                    id: crypto.randomUUID(),
-                    ...initialData
-                };
+                return generateInitialData(type);   
             },
             onGenerateDragPreview({ nativeSetDragImage }) {
                 setCustomNativeDragPreview({

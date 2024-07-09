@@ -33,7 +33,13 @@ export default function WebsiteBuilder() {
     }, []);
 
     useEffect(() => {
+        // control the element drop on Dropzone
         const cleanup = monitorForElements({
+            // source: the element drag
+            // location the element for drop
+            onDrag: ({ source, location }) => {
+                
+            },
             // handle drop
             // 1. remove element from original position
             // 2. move to new position
@@ -104,8 +110,8 @@ export default function WebsiteBuilder() {
         <div
             ref={ref} 
             className={twMerge(
-                "relative mx-auto max-w-7xl p-4 min-h-64 bg-white text-slate-700 transition", 
-                dragState.type === 'is-dropzone-over' && 'bg-blue-300/90'
+                "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 bg-white text-slate-700 transition", 
+                dragState.type === 'is-dropzone-over' && layoutElements.length === 0 && 'bg-blue-300/90'
             )} 
         >
             {layoutElements.length === 0 && (

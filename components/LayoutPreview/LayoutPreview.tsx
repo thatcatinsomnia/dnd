@@ -1,17 +1,5 @@
-import type { ComponentType } from 'react';
-import type { LayoutElement } from '#/stores/useLayoutElementsStore';
-import TextPreview from '#/components/TextPreview';
 import { useLayoutElementsStore } from '#/stores/useLayoutElementsStore';
-
-type PreviewComponentProps = Omit<LayoutElement, 'type'>; 
-
-type PreviewComponents = {
-  [key: string]: ComponentType<PreviewComponentProps>;
-};
-
-const previewComponents: PreviewComponents = {
-    'text': TextPreview
-};
+import { componentMap } from '#/helper/componentRegistry';
 
 export default function LayoutPreview() {
     const layoutElements = useLayoutElementsStore(state => state.elements);
@@ -22,16 +10,15 @@ export default function LayoutPreview() {
 
     return (
         <>
-            {layoutElements.map((layout, i) => {
-               const Component = previewComponents[layout.type];
+            {layoutElements.map(layout => {
+                const Component = componentMap[layout.type];
 
                 if (!Component) {
                     throw new Error('unhandle block component type: ' + layout.type);
                 }
 
-                return (
-                    <Component key={layout.id} id={layout.id}>{layout.children}</Component>
-                );
+                // HACK: use any to prevent typescript yell, change to correct type if find solution.
+                return <Component key={layout.id} {...layout as any} />;
             })}
         </>
     );

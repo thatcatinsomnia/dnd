@@ -3,7 +3,7 @@ import Sidebar from '#/components/Sidebar';
 
 export default function Home() {
   return (
-    <div className="h-dvh flex overflow-hidden">
+    <div className="pl-72 h-dvh flex">
         <Sidebar />
 
         <div className="flex-1">
