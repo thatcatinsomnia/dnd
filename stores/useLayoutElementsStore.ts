@@ -1,25 +1,23 @@
 import { create } from 'zustand';
 
-export type TextComponent = {
-    id: string;
-    type: 'text';
-    content: string;
-};
+export type LayoutElement = 
+    | {
+          id: string;
+          type: 'text';
+          content: string;
+      }
+    | {
+          id: string;
+          type: 'column';
+          columns: number;
+          content: LayoutElement[];
+      }
+    | {
+          id: string;
+          type: 'box',
+          content: LayoutElement[];
+      };
 
-export type ColumnComponent = {
-    id: string;
-    type: 'column';
-    columns: number;
-    content: LayoutElement[];
-};
-
-export type BoxComponent = {
-    id: string;
-    type: 'box',
-    content: LayoutElement[];
-};
-
-export type LayoutElement = TextComponent | ColumnComponent | BoxComponent;
 
 type LayoutElementsStore = {
     elements: LayoutElement[];

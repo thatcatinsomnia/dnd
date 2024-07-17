@@ -7,7 +7,7 @@ import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/clo
 import { twMerge } from 'tailwind-merge'; import LayoutPreview from '#/components/LayoutPreview';
 import { useLayoutElementsStore, pushNewLayoutElement, setLayoutElements } from '#/stores/useLayoutElementsStore';
 
-type DragState = 
+type DropState = 
     | { type: 'idle' }
     | { type: 'is-dropzone-over' };
 
@@ -16,7 +16,7 @@ const isDropzoneOver = { type: 'is-dropzone-over' } as const;
 
 export default function WebsiteBuilder() {
     const layoutElements = useLayoutElementsStore(state => state.elements);
-    const [dragState, setDragState] = useState<DragState>(idle);
+    const [dropState, setDropState] = useState<DropState>(idle);
     const ref = useRef(null);
 
     useEffect(() => {
@@ -24,9 +24,9 @@ export default function WebsiteBuilder() {
 
         const cleanup = dropTargetForElements({
             element: element,
-            onDragEnter: () => setDragState(isDropzoneOver),
-            onDragLeave: () => setDragState(idle),
-            onDrop: () => setDragState(idle)
+            onDragEnter: () => setDropState(isDropzoneOver),
+            onDragLeave: () => setDropState(idle),
+            onDrop: () => setDropState(idle)
         }); 
 
         return () => cleanup();
@@ -111,12 +111,12 @@ export default function WebsiteBuilder() {
             ref={ref} 
             className={twMerge(
                 "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 bg-white text-slate-700 transition", 
-                dragState.type === 'is-dropzone-over' && layoutElements.length === 0 && 'bg-blue-300/90'
+                dropState.type === 'is-dropzone-over' && 'bg-blue-300/90'
             )} 
         >
             {layoutElements.length === 0 && (
                 <div className="h-64 grid place-items-center text-slate-600/60">
-                    {dragState.type === 'idle' && <p>Drop Componnets Here</p>}
+                    {dropState.type === 'idle' && <p>Drop Componnets Here</p>}
                 </div>
             )}
 

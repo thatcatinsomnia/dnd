@@ -2,7 +2,8 @@ import type { FocusEvent } from 'react';
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { updateLayoutElementById } from '#/stores/useLayoutElementsStore';
-import useDraggableLayout from '#/hooks/useDraggableLayout';
+import useDraggable from '#/hooks/useDraggable';
+import useDropTarget from '#/hooks/useDropTarget';
 import DropIndicator from '#/components/DropIndicator';
 import PreviewWrapper from '#/components/PreviewWrapper';
 
@@ -13,12 +14,25 @@ export type Props = {
 
 export default function TextPreview({ id, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
-    const { dragState }  = useDraggableLayout({
+    const { dragState } = useDraggable({
         ref,
-        data: { id, content }
+        data: { 
+            id,
+            type: 'text',
+            content 
+        }
     });
 
-    const handleContentChange = (e: FocusEvent<HTMLParagraphElement>) => {
+    const { dropState } = useDropTarget({
+        ref,
+        data: { 
+            id, 
+            type: 'text',
+            content 
+        }
+    });
+
+    const handleContentChange = () => {
         const element = ref.current!;
         updateLayoutElementById(id, { content: element.innerText });
     };
@@ -35,11 +49,11 @@ export default function TextPreview({ id, content }: Props) {
                 contentEditable 
                 suppressContentEditableWarning
             >
-                {content}
+                {id}
             </p>
 
-            {dragState.type === 'is-dragging-over' && dragState.closestEdge && (
-                <DropIndicator edge={dragState.closestEdge} />
+            {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
+                <DropIndicator edge={dropState.closestEdge} />
             )}
         </PreviewWrapper>
     );

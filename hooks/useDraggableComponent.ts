@@ -19,8 +19,6 @@ type Params = {
     previewOffset?: { x: PxString, y: PxString };
 };
 
-const idle = { type: 'idle' } as const;
-
 function generateInitialData(type: AvailableComponentType) {
     if (type === 'column') {
         return {
@@ -47,7 +45,7 @@ const useDraggableComponent = ({
     type,
     previewOffset = { x: '8px', y: '16px' } 
 }: Params) => {
-    const [dragState, setDragState] = useState<DraggableState>(idle);
+    const [dragState, setDragState] = useState<DraggableState>({ type: 'idle' });
 
     useEffect(() => {
         const element = ref?.current;

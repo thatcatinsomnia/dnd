@@ -1,7 +1,8 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import useDraggableLayout from '#/hooks/useDraggableLayout';
+import useDraggable from '#/hooks/useDraggable';
+import useDropTarget from '#/hooks/useDropTarget';
 import { getComponent } from '#/helper/componentRegistry';
 import DropIndicator from '#/components/DropIndicator';
 import PreviewWrapper from '#/components/PreviewWrapper';
@@ -14,9 +15,24 @@ export type Props = {
 
 export default function ColumnPreview({ id, columns = 2, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
-    const { dragState }  = useDraggableLayout({
+    const { dragState }  = useDraggable({
         ref,
-        data: { id, content }
+        data: { 
+            id, 
+            type: 'column',
+            columns, 
+            content 
+        }
+    });
+
+    const { dropState }  = useDropTarget({
+        ref,
+        data: { 
+            id, 
+            type: 'column',
+            columns, 
+            content 
+        }
     });
 
     const styles = { "--grid-cols": columns } as React.CSSProperties;
@@ -39,8 +55,8 @@ export default function ColumnPreview({ id, columns = 2, content }: Props) {
                 })} 
             </div>
 
-            {dragState.type === 'is-dragging-over' && dragState.closestEdge && (
-                <DropIndicator edge={dragState.closestEdge} />
+            {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
+                <DropIndicator edge={dropState.closestEdge} />
             )}
         </PreviewWrapper>
     );

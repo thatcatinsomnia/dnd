@@ -1,7 +1,7 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import useDraggableLayout from '#/hooks/useDraggableLayout';
+import useDropTarget from '#/hooks/useDropTarget';
 
 type Props = {
     id: string;
@@ -10,12 +10,12 @@ type Props = {
 
 export default function ({ id, content }: Props) {
     const ref = useRef<HTMLDivElement>(null);
-    const { dragState } = useDraggableLayout({
+    const { dropState } = useDropTarget({
         ref,
         data: {
             id,
             type: 'box',
-            content: null
+            content
         }
     });
 
@@ -25,11 +25,11 @@ export default function ({ id, content }: Props) {
                 ref={ref}
                 className={twMerge(
                     "h-44 flex items-center justify-center",
-                    dragState.type === 'is-dragging-over' && 'bg-blue-200'
+                    dropState.type === 'is-dragging-over' && 'bg-blue-200'
                 )}
             >
                 <div className="flex flex-col">
-                    <button className="py-2 bg-blue-500 text-white rounded">Add</button>
+                    {/* <button className="py-2 bg-blue-500 text-white rounded">Add</button> */}
                     {id.split('-').at(0)}
                 </div>
             </div>
