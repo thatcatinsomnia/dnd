@@ -1,6 +1,5 @@
 import type { RefObject } from 'react';
-import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/closest-edge';
-import type { AvailableComponentType } from '#/helper/componentRegistry';
+import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect } from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
@@ -9,35 +8,40 @@ import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/eleme
 type DraggableState = 
     | { type: 'idle' }
     | { type: 'preview', container: HTMLElement }
-    | { type: 'is-dragging', closestEdge?: Edge | null };
+    | { type: 'is-dragging' };
 
 type PxString = `${number}px`;
 
 type Params = {
     ref: RefObject<HTMLDivElement> | undefined;
-    type: AvailableComponentType;
+    type: LayoutElement['type'];
     previewOffset?: { x: PxString, y: PxString };
 };
 
-function generateInitialData(type: AvailableComponentType) {
-    if (type === 'column') {
-        return {
-            id: crypto.randomUUID(),
-            type: 'column',
-            columns: 2,
-            content: [{ id: crypto.randomUUID(), type: 'box' }, { id: crypto.randomUUID(), type: 'box' }]
-        };
-    }
+function generateInitialData(type: LayoutElement['type']): LayoutElement {
+    const id = crypto.randomUUID();
 
     if (type === 'text') {
         return {
-            id: crypto.randomUUID(),
-            type: 'text',
-            content: 'Default Text'
+            id,
+            type,
+            content: 'Default text'
+        }
+    }
+
+    if (type === 'product-list') {
+        return {
+            id,
+            type,
+            content: [
+                { id: '1', name: 'product-1', image: 'product-1-image', link: 'product-1-link', price: 999 },
+                { id: '2', name: 'product-2', image: 'product-2-image', link: 'product-2-link', price: 888 },
+                { id: '3', name: 'product-3', image: 'product-3-image', link: 'product-3-link', price: 777 }
+            ]
         };
     }
 
-    throw Error('unhandle compoennt type when generate initial data');
+    throw Error(`unhandle component type "${type}" when generate initial data`);
 }
 
 const useDraggableComponent = ({ 
@@ -78,7 +82,7 @@ const useDraggableComponent = ({
         return () => cleanup();
     }, []);
 
-    return dragState;
+    return { dragState };
 };
 
 export default useDraggableComponent;

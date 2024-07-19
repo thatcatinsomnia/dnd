@@ -1,5 +1,6 @@
 import TextComponent from '#/components/TextComponent';
 import ColumnComponent from '#/components/ColumnComponent';
+import ProductListComponent from '#/components/ProductListComponent';
 
 export default function Sidebar() {
     return (
@@ -10,8 +11,11 @@ export default function Sidebar() {
                 <li className="w-full">
                     <TextComponent />
                 </li>
+                {/* <li className="w-full"> */}
+                {/*     <ColumnComponent /> */}
+                {/* </li> */}
                 <li className="w-full">
-                    <ColumnComponent />
+                    <ProductListComponent />
                 </li>
             </ul>
         </div>

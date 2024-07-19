@@ -17,7 +17,7 @@ export default function ColumnPreview({ id, columns = 2, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
     const { dragState }  = useDraggable({
         ref,
-        data: { 
+        initialData: { 
             id, 
             type: 'column',
             columns, 

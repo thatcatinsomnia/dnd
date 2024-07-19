@@ -11,11 +11,11 @@ type DragState =
     | { type: 'is-dragging' };
 
 export default function useDraggable({ 
-    ref, 
-    data = {} as LayoutElement 
+    ref,
+    initialData
 }: {
     ref: MutableRefObject<HTMLElement | null>;
-    data?: LayoutElement
+    initialData: LayoutElement
 }) {
     const [dragState, setDragState] = useState<DragState>({ type: 'idle' });
 
@@ -29,16 +29,7 @@ export default function useDraggable({
         const cleanup = draggable({ 
             element,
             getInitialData: () => {
-                return data;
-            },
-            canDrag: () => {
-                if (data.type === 'box') {
-                    console.log('block drag');
-                    
-                    return false;
-                }
-
-                return true;
+                return initialData;
             },
             onGenerateDragPreview({ nativeSetDragImage }) {
                 setCustomNativeDragPreview({

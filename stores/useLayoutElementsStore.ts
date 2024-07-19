@@ -1,10 +1,23 @@
 import { create } from 'zustand';
 
+type Product = {
+    id: string;
+    name: string;
+    image: string;
+    link: string;
+    price: number;
+}
+
 export type LayoutElement = 
     | {
           id: string;
           type: 'text';
           content: string;
+      }
+    | {
+          id: string;
+          type: 'product-list';
+          content: Product[];
       }
     | {
           id: string;
@@ -16,7 +29,7 @@ export type LayoutElement =
           id: string;
           type: 'box',
           content: LayoutElement[];
-      };
+      }
 
 
 type LayoutElementsStore = {

@@ -1,11 +1,9 @@
 import TextPreview from '#/components/TextPreview';
-import ColumnPreview from '#/components/ColumnPreview';
-import Box from '#/components/Box';
+import ProductListPreview from '#/components/ProductListPreview'
 
 export const componentMap = {
     text: TextPreview,
-    column: ColumnPreview,
-    box: Box
+    'product-list': ProductListPreview
 };
 
 export type AvailableComponentType = keyof typeof componentMap;

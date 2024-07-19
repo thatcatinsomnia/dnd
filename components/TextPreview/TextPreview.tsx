@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { updateLayoutElementById } from '#/stores/useLayoutElementsStore';
@@ -16,7 +15,7 @@ export default function TextPreview({ id, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
     const { dragState } = useDraggable({
         ref,
-        data: { 
+        initialData: { 
             id,
             type: 'text',
             content 
@@ -49,7 +48,7 @@ export default function TextPreview({ id, content }: Props) {
                 contentEditable 
                 suppressContentEditableWarning
             >
-                {id}
+                {content}
             </p>
 
             {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
