@@ -22,10 +22,11 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
     const id = crypto.randomUUID();
 
     if (type === 'text') {
+
         return {
-            id,
+            id: id,
             type,
-            content: 'Default text'
+            content: id.split('-')[0]
         }
     }
 
@@ -34,9 +35,6 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
             id,
             type,
             content: [
-                { id: '1', name: 'product-1', image: 'product-1-image', link: 'product-1-link', price: 999 },
-                { id: '2', name: 'product-2', image: 'product-2-image', link: 'product-2-link', price: 888 },
-                { id: '3', name: 'product-3', image: 'product-3-image', link: 'product-3-link', price: 777 }
             ]
         };
     }

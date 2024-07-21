@@ -8,31 +8,38 @@ import PreviewWrapper from '#/components/PreviewWrapper';
 
 export type Props = {
     id: string;
+    type: 'text',
     content: string;
 };
 
-export default function TextPreview({ id, content }: Props) {
+export default function TextPreview({ id, type, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
+
     const { dragState } = useDraggable({
         ref,
         initialData: { 
             id,
-            type: 'text',
+            type,
             content 
         }
     });
 
-    const { dropState } = useDropTarget({
-        ref,
+    const { dropState } = useDropTarget({ 
+        ref, 
         data: { 
             id, 
-            type: 'text',
+            type, 
             content 
-        }
+        } 
     });
 
     const handleContentChange = () => {
-        const element = ref.current!;
+        const element = ref.current;
+
+        if (!element) {
+            throw new Error('ref not binding!!!');
+        }
+
         updateLayoutElementById(id, { content: element.innerText });
     };
 

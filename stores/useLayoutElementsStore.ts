@@ -1,36 +1,10 @@
+import type { Props as TextPreviewProps } from '#/components/TextPreview';
+import type { Props as ProductListPreviewProps } from '#/components/ProductListPreview';
 import { create } from 'zustand';
 
-type Product = {
-    id: string;
-    name: string;
-    image: string;
-    link: string;
-    price: number;
-}
-
 export type LayoutElement = 
-    | {
-          id: string;
-          type: 'text';
-          content: string;
-      }
-    | {
-          id: string;
-          type: 'product-list';
-          content: Product[];
-      }
-    | {
-          id: string;
-          type: 'column';
-          columns: number;
-          content: LayoutElement[];
-      }
-    | {
-          id: string;
-          type: 'box',
-          content: LayoutElement[];
-      }
-
+    | TextPreviewProps
+    | ProductListPreviewProps;
 
 type LayoutElementsStore = {
     elements: LayoutElement[];
@@ -50,8 +24,28 @@ export function setLayoutElements(layoutElements: LayoutElement[]) {
 
 export function pushNewLayoutElement(newElement: LayoutElement) {
     useLayoutElementsStore.setState(state => {
-        return { elements: [...state.elements, newElement]}
+        const layoutElements = [...state.elements, newElement];
+        console.log({ layoutElements });
+
+        return { elements: layoutElements}
     });
+}
+
+export function insertNewLayoutElmement({ element, targetIndex }: {
+    element: LayoutElement;
+    targetIndex: number;
+}) {
+    useLayoutElementsStore.setState(state => {
+        const newLayoutElements = [
+            ...state.elements.slice(0, targetIndex), 
+            element, 
+            ...state.elements.slice(targetIndex)
+        ];
+
+        console.log({ newLayoutElements });
+        return { elements: newLayoutElements };
+    });
+
 }
 
 export function updateLayoutElementById<T extends LayoutElement>(
