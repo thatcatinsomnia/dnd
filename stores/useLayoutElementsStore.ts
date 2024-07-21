@@ -8,12 +8,14 @@ export type LayoutElement =
 
 type LayoutElementsStore = {
     elements: LayoutElement[];
+    selectedId: LayoutElement['id'] | null;
 };
 
 type UpdateData<T extends LayoutElement> = Omit<Partial<T>, 'type' | 'id'>;
 
 export const useLayoutElementsStore = create<LayoutElementsStore>()(() => ({
-    elements: []
+    elements: [],
+    selectedId: null
 }));
 
 export function setLayoutElements(layoutElements: LayoutElement[]) {
@@ -22,11 +24,15 @@ export function setLayoutElements(layoutElements: LayoutElement[]) {
     }));
 }
 
+export function selectLayoutElement(id: string | number | null) {
+    useLayoutElementsStore.setState(state => ({
+        selectedId: id
+    }));
+}
+
 export function pushNewLayoutElement(newElement: LayoutElement) {
     useLayoutElementsStore.setState(state => {
         const layoutElements = [...state.elements, newElement];
-        console.log({ layoutElements });
-
         return { elements: layoutElements}
     });
 }
@@ -42,7 +48,6 @@ export function insertNewLayoutElmement({ element, targetIndex }: {
             ...state.elements.slice(targetIndex)
         ];
 
-        console.log({ newLayoutElements });
         return { elements: newLayoutElements };
     });
 

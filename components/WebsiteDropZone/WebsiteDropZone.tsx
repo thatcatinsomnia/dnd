@@ -4,8 +4,9 @@ import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect, useRef } from 'react';
 import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { cn } from '#/lib/utils'; 
 import { useLayoutElementsStore, pushNewLayoutElement, insertNewLayoutElmement } from '#/stores/useLayoutElementsStore';
-import { twMerge } from 'tailwind-merge'; import LayoutPreview from '#/components/LayoutPreview';
+import LayoutPreview from '#/components/LayoutPreview';
 
 type DropState = 
     | { type: 'idle' }
@@ -14,7 +15,7 @@ type DropState =
 const idle = { type: 'idle' } as const;
 const isDropzoneOver = { type: 'is-dropzone-over' } as const;
 
-export default function WebsiteBuilder() {
+export default function WebsiteDropzone() {
     const layoutElements = useLayoutElementsStore(state => state.elements);
     const [dropState, setDropState] = useState<DropState>(idle);
     const ref = useRef(null);
@@ -54,7 +55,6 @@ export default function WebsiteBuilder() {
 
                 const sourceData = source.data as LayoutElement;
                 const targetData = target.data as LayoutElement;
-                console.log('targetId: ', targetData.id);
 
                 const indexOfTarget = layoutElements.findIndex(element => element.id === targetData.id);
                 const indexOfExistElement = layoutElements.findIndex(el => el.id === sourceData.id);
@@ -81,68 +81,7 @@ export default function WebsiteBuilder() {
                     return;
                 }
 
-
-               console.log('reorder componet'); 
-                
-
-                // if (indexOfExistElement > 0 && indexOfTarget > 0) {
-                //     const closestEdge = extractClosestEdge(targetData);
-                // }
-
-                // the element dragging, it can be new elemnet from sidebar or exist one
-                // const existElementIndex = layoutElements.findIndex(el => el.id === sourceData.id);
-                // const isNewElement = existElementIndex === -1;
-                //
-                // if (isNewElement) {
-                //     pushNewLayoutElement(sourceData);
-                // }
-                
-                // NOTE: not sure if there is other way to sync data with ui
-                // const layoutElement = isNewElement ? (source.data as LayoutElement) : layoutElements[existElementIndex];
-
-                // drop element on dropzone, just push to array
-                // if (isNewElement && location.current.dropTargets.length === 1) {
-                    // pushNewLayoutElement(sourceData);
-                    // return;
-                // }
-
-                // drop element relative to another element
-                // if (location.current.dropTargets.length === 2) {
-                //     // get first element from dropTargets, it will be the relative layoutElement
-                //     // second element will be dropzone, we don't care about it
-                //     const [destinationElement] = location.current.dropTargets;
-                //     
-                //     const indexOfTarget = layoutElements.findIndex(el => el.id === destinationElement.data.id);
-                //     const closestEdgeOfTarget = extractClosestEdge(destinationElement.data);
-                //
-                //     let indexToInsert: number; 
-                //      
-                //     // only check top & bottom for now
-                //     if (closestEdgeOfTarget === 'top') {
-                //         indexToInsert = indexOfTarget;
-                //     } else {
-                //         indexToInsert = indexOfTarget + 1;
-                //     }
-                //     
-                //     // drag on same position
-                //     if (!isNewElement && indexToInsert === existElementIndex) {
-                //         return;
-                //     } 
-                //
-                //     const orderedLayoutElements = [...layoutElements];
-                //
-                //     // reorder with exist element, remove old element in old position first
-                //     if (!isNewElement) {
-                //         orderedLayoutElements.splice(existElementIndex, 1);                    
-                //         
-                //         if (indexToInsert > existElementIndex) {
-                //             indexToInsert--;
-                //         }
-                //     } 
-                //
-                //     orderedLayoutElements.splice(indexToInsert, 0, layoutElement);
-                //     setLayoutElements(orderedLayoutElements);
-                // }
+               console.log('[reorder componet]'); 
             }
         });
 
@@ -152,9 +91,11 @@ export default function WebsiteBuilder() {
     return (
         <div
             ref={ref} 
-            className={twMerge(
-                "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 bg-white text-slate-700 transition", 
-                dropState.type === 'is-dropzone-over' && 'bg-blue-300/90'
+            className={cn(
+                "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 transition bg-white shadow-sm", 
+                {
+                    'bg-blue-300': dropState.type === 'is-dropzone-over'
+                }
             )} 
         >
             {layoutElements.length === 0 && (

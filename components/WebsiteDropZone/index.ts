@@ -1,3 +1,3 @@
-export * from './WebsiteDropZone';
-export { default } from './WebsiteDropZone';
+export * from './WebsiteDropzone';
+export { default } from './WebsiteDropzone';
 

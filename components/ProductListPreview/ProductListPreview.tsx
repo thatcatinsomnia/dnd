@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '#/lib/utils';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
 import DropIndicator from '#/components/DropIndicator';
@@ -11,7 +11,7 @@ type Product = {
 
 // TODO: set content to correct type
 export type Props = {
-    id: string;
+    id: string | number;
     type: 'product-list';
     content: Array<Product>; 
 };
@@ -55,12 +55,14 @@ export default function ProductListPreview({ id, type, content }: Props) {
     const products = generateProducts(content);
 
     return (
-        <PreviewWrapper>
+        <PreviewWrapper layoutId={id}>
             <div 
                 ref={ref}
-                className={twMerge(
+                className={cn(
                     "p-4 mb-6 flex gap-4 overflow-y-auto",
-                    dragState.type === 'is-dragging' && 'opacity-30'
+                    {
+                        'opacity-30': dragState.type === 'is-dragging'
+                    }
                 )}
             >
                 {products.map(p => (

@@ -1,7 +1,7 @@
 // check: https://github.com/alexreardon/pdnd-react-tailwind/blob/main/src/drop-indicator.tsx
 import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
 import type { CSSProperties, HTMLAttributes } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '#/lib/utils';
 
 type Orientation = 'horizontal' | 'vertical';
 
@@ -46,7 +46,7 @@ export default function DropIndicator({ edge, gap = 0 }: { edge: Edge; gap?: Num
                     '--offset-terminal': `${offsetToAlignTerminalWithLine}px`,
                 } as CSSProperties
             }
-            className={twMerge(
+            className={cn(
                 "absolute z-10 bg-blue-700 pointer-events-none box-border",
                 "before:content-[''] before:w-[--terminal-size] before:h-[--terminal-size] before:absolute before:border-[length:--line-thickness] before:border-solid before:border-blue-700 before:rounded-full",
                 orientationStyles[orientation], 

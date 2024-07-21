@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
-
 import { useRef } from 'react';
 import { createPortal } from 'react-dom';
 import useDraggableComponent from '#/hooks/useDraggableComponent';
@@ -21,7 +20,7 @@ export default function DraggableComponent({ type, icon, text, preview }: Props)
 
     return (
         <div
-            className="p-4 h-22 flex flex-col items-center gap-2 bg-slate-700 rounded cursor-grab"
+            className="p-4 h-22 flex flex-col items-center gap-2 bg-[--bg-sidebar-component] rounded cursor-grab"
             ref={ref}
         >
             {icon}
