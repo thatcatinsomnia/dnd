@@ -34,7 +34,7 @@
     --bg-sidebar-component: hsl(237, 14%, 22%);
   }
 
-  .dark {
+  :root[class~="dark"] {
     --background: 253 15% 16%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -52,7 +52,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --input: 217.2 9.86% 26.65%;
     --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -69,7 +69,9 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+

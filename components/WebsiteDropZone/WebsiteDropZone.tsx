@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { cn } from '#/lib/utils'; 
-import { useLayoutElementsStore, pushNewLayoutElement, insertNewLayoutElmement } from '#/stores/useLayoutElementsStore';
+import { useLayoutElementsStore, pushNewLayoutElement, insertNewLayoutElmement, reorderLayoutElements } from '#/stores/useLayoutElementsStore';
 import LayoutPreview from '#/components/LayoutPreview';
 
 type DropState = 
@@ -25,6 +25,9 @@ export default function WebsiteDropzone() {
 
         const cleanup = dropTargetForElements({
             element: element,
+            getData: () => {
+                return { type: 'dropzone' }
+            },
             onDragEnter: () => setDropState(isDropzoneOver),
             onDragLeave: () => setDropState(idle),
             onDrop: () => setDropState(idle)
@@ -57,13 +60,12 @@ export default function WebsiteDropzone() {
                 const targetData = target.data as LayoutElement;
 
                 const indexOfTarget = layoutElements.findIndex(element => element.id === targetData.id);
-                const indexOfExistElement = layoutElements.findIndex(el => el.id === sourceData.id);
-                const isNewElement = indexOfExistElement === -1;
-
-                // console.log('indexOfTarget:', indexOfTarget);
+                const indexOfSource = layoutElements.findIndex(element => element.id === sourceData.id);
+                const isNewElement = indexOfSource === -1;
 
                 // drop new component in dropzone
-                if (indexOfTarget < 0 && target) {
+                if (isNewElement && target.data.type === 'dropzone') {
+                    console.log('[push new component]')
                     pushNewLayoutElement(sourceData);
                     return;
                 } 
@@ -72,7 +74,7 @@ export default function WebsiteDropzone() {
                 if (indexOfTarget >= 0 && isNewElement) {
                     console.log('[insert new component at specify position]');
 
-                    const closestEdge  = extractClosestEdge(targetData);
+                    const closestEdge = extractClosestEdge(targetData);
 
                     insertNewLayoutElmement({
                         element: sourceData,
@@ -81,7 +83,28 @@ export default function WebsiteDropzone() {
                     return;
                 }
 
-               console.log('[reorder componet]'); 
+                // reorder
+                if (indexOfSource >= 0 && indexOfTarget >= 0) {
+                    console.log('[reorder componet]'); 
+
+                    const closestEdge = extractClosestEdge(targetData);
+                    let adjustTargetIndex;
+
+                    if (closestEdge === 'top') {
+                        adjustTargetIndex = indexOfTarget > indexOfSource ? indexOfTarget - 1 : indexOfTarget; 
+                    } else {
+                        adjustTargetIndex = indexOfTarget > indexOfSource ? indexOfTarget : indexOfTarget + 1;
+                    }
+
+                    reorderLayoutElements({
+                        sourceIndex: indexOfSource,
+                        targetIndex: adjustTargetIndex
+                    });
+
+                    return;
+                }
+
+                console.log('other case not handle...');
             }
         });
 

@@ -1,11 +1,15 @@
-import { useRef, useState, useEffect } from 'react';
+import type { MouseEventHandler } from 'react';
+import { useRef } from 'react';
 import { cn } from '#/lib/utils';
-import { useLayoutElementsStore, selectLayoutElement, setLayoutElements } from '#/stores/useLayoutElementsStore';
+import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
 import DropIndicator from '#/components/DropIndicator';
 import PreviewWrapper from '#/components/PreviewWrapper';
-import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetClose, SheetContent } from '#/components/ui/sheet';
+import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetContent } from '#/components/ui/sheet';
+import { Input } from '#/components/ui/input';
+import { Label } from '#/components/ui/label';
+import { Button } from '#/components/ui/button';
 
 export type Props = {
     id: string | number;
@@ -15,9 +19,9 @@ export type Props = {
 
 export default function TextPreview({ id, type, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const selectedId = useLayoutElementsStore(state => state.selectedId);
     const isSelected = selectedId === id;
-    const [opened, setOpened] = useState(isSelected);
 
     const { dragState } = useDraggable({
         ref,
@@ -43,9 +47,10 @@ export default function TextPreview({ id, type, content }: Props) {
         } 
     };
 
-    // useEffect(() => {
-    //     setOpened(isSelected);
-    // }, [isSelected]);
+    const handleContentSave = () => {
+        updateLayoutElementById(id, inputRef.current?.value || content);
+        selectLayoutElement(null);
+    };
 
     return (
         <>
@@ -66,6 +71,7 @@ export default function TextPreview({ id, type, content }: Props) {
                     <DropIndicator edge={dropState.closestEdge} />
                 )}
             </PreviewWrapper>
+
             <Sheet
                 open={isSelected}
                 onOpenChange={handleOpenChange}
@@ -76,8 +82,21 @@ export default function TextPreview({ id, type, content }: Props) {
                         <SheetTitle>Edit Text Component</SheetTitle>
                         <SheetDescription>make changes to your text component here. click save when you're done.</SheetDescription>
                     </SheetHeader>
-                    <div>
-                        content
+                    
+                    <div className="py-6 grid gap-8">
+                        <div>
+                            <Label className="block mb-1.5">ID:</Label>
+                            <p className="text-sm text-slate-200">{id}</p>
+                        </div>
+
+                        <div>
+                            <Label className="block mb-1.5" htmlFor="content">Content</Label>
+                            <Input id="content" defaultValue={content} ref={inputRef} autoComplete="false" />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end items-center gap-6">
+                        <Button onClick={handleContentSave}>Save</Button>
                     </div>
                 </SheetContent>
             </Sheet> 

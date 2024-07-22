@@ -26,7 +26,7 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
         return {
             id: id,
             type,
-            content: id.split('-')[0]
+            content: 'Default Text'
         }
     }
 
@@ -34,8 +34,7 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
         return {
             id,
             type,
-            content: [
-            ]
+            content: []
         };
     }
 

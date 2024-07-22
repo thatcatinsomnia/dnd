@@ -11,7 +11,9 @@ type LayoutElementsStore = {
     selectedId: LayoutElement['id'] | null;
 };
 
-type UpdateData<T extends LayoutElement> = Omit<Partial<T>, 'type' | 'id'>;
+type LayoutElementContentMap = {
+    [L in LayoutElement as L['type']]: L['content']
+};
 
 export const useLayoutElementsStore = create<LayoutElementsStore>()(() => ({
     elements: [],
@@ -53,17 +55,37 @@ export function insertNewLayoutElmement({ element, targetIndex }: {
 
 }
 
-export function updateLayoutElementById<T extends LayoutElement>(
-    id: string, 
-    data: UpdateData<T>
+export function reorderLayoutElements({ sourceIndex, targetIndex }: {
+    sourceIndex: number;
+    targetIndex: number;
+}) {
+    useLayoutElementsStore.setState(state => {
+        console.log({ elements: state.elements });
+
+        const cloned = [...state.elements];
+
+        const [moved] = cloned.splice(sourceIndex, 1);
+        cloned.splice(targetIndex, 0, moved);
+
+        console.log({ elements: cloned });
+
+        return {
+            elements: cloned
+        }
+    });
+}
+
+export function updateLayoutElementById<T extends LayoutElement['type']>(
+    id: string | number, 
+    data: LayoutElementContentMap[T]
 ) {
     useLayoutElementsStore.setState(state => {
         const updatedElements = state.elements.map(element => {
             if (element.id === id) {
                 return {
                     ...element,
-                    ...data
-                };
+                    content: data
+                } as LayoutElement;
             }
 
             return element;
