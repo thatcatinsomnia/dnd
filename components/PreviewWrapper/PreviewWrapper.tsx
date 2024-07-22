@@ -17,7 +17,7 @@ export default function PreviewWrapper({ children, layoutId }: {
     return (
         <div
             className={cn(
-                "mt-4 relative after:content-[''] after:absolute after:inset-0 after:border after:border-transparent after:pointer-events-none hover:after:border-blue-600",
+                "relative after:content-[''] after:absolute after:inset-0 after:border after:border-transparent after:pointer-events-none hover:after:border-blue-600",
                 {
                     'after:border-2': isSelected,
                     'after:border-dashed': isSelected,

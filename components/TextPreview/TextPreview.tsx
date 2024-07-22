@@ -1,4 +1,3 @@
-import type { MouseEventHandler } from 'react';
 import { useRef } from 'react';
 import { cn } from '#/lib/utils';
 import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
@@ -20,6 +19,7 @@ export type Props = {
 export default function TextPreview({ id, type, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const fontSizeRef = useRef<HTMLInputElement>(null);
     const selectedId = useLayoutElementsStore(state => state.selectedId);
     const isSelected = selectedId === id;
 
@@ -28,7 +28,7 @@ export default function TextPreview({ id, type, content }: Props) {
         initialData: { 
             id,
             type,
-            content 
+            content
         }
     });
 
@@ -48,7 +48,13 @@ export default function TextPreview({ id, type, content }: Props) {
     };
 
     const handleContentSave = () => {
-        updateLayoutElementById(id, inputRef.current?.value || content);
+        const input = inputRef.current;
+
+        if (!input) {
+            return;
+        }
+
+        updateLayoutElementById(id, input.value);
         selectLayoutElement(null);
     };
 
@@ -76,7 +82,6 @@ export default function TextPreview({ id, type, content }: Props) {
                 open={isSelected}
                 onOpenChange={handleOpenChange}
             >
-
                 <SheetContent>
                     <SheetHeader>
                         <SheetTitle>Edit Text Component</SheetTitle>
@@ -91,7 +96,7 @@ export default function TextPreview({ id, type, content }: Props) {
 
                         <div>
                             <Label className="block mb-1.5" htmlFor="content">Content</Label>
-                            <Input id="content" defaultValue={content} ref={inputRef} autoComplete="false" />
+                            <Input id="content" defaultValue={content} ref={inputRef} />
                         </div>
                     </div>
 
