@@ -3,6 +3,7 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect, useRef } from 'react';
 import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { autoScrollWindowForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { cn } from '#/lib/utils'; 
 import { useLayoutElementsStore, pushNewLayoutElement, insertNewLayoutElmement, reorderLayoutElements } from '#/stores/useLayoutElementsStore';
@@ -23,7 +24,7 @@ export default function WebsiteDropzone() {
     useEffect(() => {
         const element = ref.current!;
 
-        const cleanup = dropTargetForElements({
+        const cleanupDropTarget = dropTargetForElements({
             element: element,
             getData: () => {
                 return { type: 'dropzone' }
@@ -33,7 +34,12 @@ export default function WebsiteDropzone() {
             onDrop: () => setDropState(idle)
         }); 
 
-        return () => cleanup();
+        const cleanupAutoScroll = autoScrollWindowForElements();
+
+        return () => {
+            cleanupDropTarget();
+            cleanupAutoScroll();
+        };
     }, []);
 
     useEffect(() => {
