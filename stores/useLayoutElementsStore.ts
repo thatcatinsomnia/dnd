@@ -1,10 +1,26 @@
-import type { Props as TextPreviewProps } from '#/components/TextPreview';
-import type { Props as ProductListPreviewProps } from '#/components/ProductListPreview';
 import { create } from 'zustand';
 
 export type LayoutElement = 
-    | TextPreviewProps
-    | ProductListPreviewProps;
+    | {
+        id: string | number;
+        type: 'text';
+        content: string;
+      }
+    | {
+        id: string | number;
+        type: 'product-list';
+        content: {
+            id: string | number;
+        }[];
+      }
+    | {
+        id: string | number;
+        type: 'image'
+        content: {
+            alt: string;
+            src: string;
+        }
+      }
 
 type LayoutElementsStore = {
     elements: LayoutElement[];
@@ -12,7 +28,7 @@ type LayoutElementsStore = {
 };
 
 type LayoutElementContentMap = {
-    [L in LayoutElement as L['type']]: L['content']
+    [K in LayoutElement as K['type']]: K['content']
 };
 
 export const useLayoutElementsStore = create<LayoutElementsStore>()(() => ({

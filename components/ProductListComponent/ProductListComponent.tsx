@@ -4,7 +4,7 @@ import DraggableComponent from '#/components/DraggableComponent';
 import { GalleryHorizontalIcon } from 'lucide-react';
 
 function DragPreviewProductList() {
-    return <GalleryHorizontalIcon className="p-2 size-10 bg-slate-800 rounded" />
+    return <GalleryHorizontalIcon className="p-2 size-10 bg-[--bg-sidebar-component] rounded" />
 }
 
 export default function ProductListComponent() {

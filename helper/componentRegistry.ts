@@ -1,18 +1,20 @@
 import TextPreview from '#/components/TextPreview';
-import ProductListPreview from '#/components/ProductListPreview'
+import ProductListPreview from '#/components/ProductListPreview';
+import ImagePreview from '#/components/ImagePreview';
 
-export const componentMap = {
+export const registeredComponents = {
     text: TextPreview,
-    'product-list': ProductListPreview
+    'product-list': ProductListPreview,
+    image: ImagePreview
 };
 
-export type AvailableComponentType = keyof typeof componentMap;
+export type AvailableComponentType = keyof typeof registeredComponents;
 
 export function getComponent(type: AvailableComponentType) {
-  const component = componentMap[type];
+  const component = registeredComponents[type];
 
   if (!component) {
-    throw new Error(`unhandle component type: ${type}`);
+    throw new Error(`the component type is not registered: ${type}`);
   }
 
   return component;

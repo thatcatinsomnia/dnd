@@ -1,5 +1,5 @@
 import { useLayoutElementsStore } from '#/stores/useLayoutElementsStore';
-import { componentMap } from '#/helper/componentRegistry';
+import { registeredComponents } from '#/helper/componentRegistry';
 
 export default function LayoutPreview() {
     const layoutElements = useLayoutElementsStore(state => state.elements);
@@ -11,7 +11,7 @@ export default function LayoutPreview() {
     return (
         <>
             {layoutElements.map(layout => {
-                const Component = componentMap[layout.type];
+                const Component = registeredComponents[layout.type];
 
                 if (!Component) {
                     throw new Error('unhandle block component type: ' + layout.type);

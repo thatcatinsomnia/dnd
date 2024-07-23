@@ -1,3 +1,4 @@
+import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
 import { cn } from '#/lib/utils';
 import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
@@ -10,16 +11,11 @@ import { Input } from '#/components/ui/input';
 import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 
-export type Props = {
-    id: string | number;
-    type: 'text',
-    content: string;
-};
+export type Props = Extract<LayoutElement, { type: 'text' }>;
 
 export default function TextPreview({ id, type, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const fontSizeRef = useRef<HTMLInputElement>(null);
     const selectedId = useLayoutElementsStore(state => state.selectedId);
     const isSelected = selectedId === id;
 

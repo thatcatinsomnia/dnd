@@ -1,3 +1,4 @@
+import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
 import { cn } from '#/lib/utils';
 import { SnailIcon } from 'lucide-react';
@@ -11,16 +12,8 @@ import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 import { Textarea } from '#/components/ui/textarea';
 
-type Product = {
-    id: string;
-};
-
 // TODO: set content to correct type
-export type Props = {
-    id: string | number;
-    type: 'product-list';
-    content: Array<Product>; 
-};
+export type Props = Extract<LayoutElement, { type: 'product-list' }>;
 
 const PRODUCT_TEMP_SIZE = 10;
 
@@ -136,7 +129,7 @@ export default function ProductListPreview({ id, type, content }: Props) {
                         </div>
 
                         <div>
-                            <Label className="block mb-1.5" htmlFor="content">Content</Label>
+                            <Label className="block mb-1.5" htmlFor="content">Product Id List</Label>
                             <Textarea 
                                 className="min-h-[140px]" 
                                 defaultValue={content.map(data => data.id).join(', ')}

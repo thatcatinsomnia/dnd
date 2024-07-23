@@ -12,7 +12,7 @@ type DraggableState =
 
 type PxString = `${number}px`;
 
-type Params = {
+type Args = {
     ref: RefObject<HTMLDivElement> | undefined;
     type: LayoutElement['type'];
     previewOffset?: { x: PxString, y: PxString };
@@ -22,7 +22,6 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
     const id = crypto.randomUUID();
 
     if (type === 'text') {
-
         return {
             id: id,
             type,
@@ -38,14 +37,25 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
         };
     }
 
-    throw Error(`unhandle component type "${type}" when generate initial data`);
+    if (type === 'image') {
+        return {
+            id,
+            type,
+            content: {
+                src: '',
+                alt: ''
+            }
+        }
+    }
+
+    throw Error(`unhandle component initial data: "${type}"`);
 }
 
 const useDraggableComponent = ({ 
     ref, 
     type,
     previewOffset = { x: '8px', y: '16px' } 
-}: Params) => {
+}: Args) => {
     const [dragState, setDragState] = useState<DraggableState>({ type: 'idle' });
 
     useEffect(() => {

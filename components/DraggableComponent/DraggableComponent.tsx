@@ -30,3 +30,4 @@ export default function DraggableComponent({ type, icon, text, preview }: Props)
         </div> 
     );
 }
+

@@ -4,7 +4,7 @@ import { TypeIcon } from 'lucide-react';
 import DraggableComponent from '#/components/DraggableComponent';
 
 function DragPreviewText() {
-    return <TypeIcon className="p-2 size-10 bg-slate-800 rounded" />
+    return <TypeIcon className="p-2 size-10 bg-[--bg-sidebar-component] rounded" />
 }
 
 export default function TextComponent() {
