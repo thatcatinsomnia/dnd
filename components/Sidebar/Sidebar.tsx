@@ -1,6 +1,7 @@
 import TextComponent from '#/components/TextComponent';
 import ProductListComponent from '#/components/ProductListComponent';
 import ImageComponent from '#/components/ImageComponent';
+import FeaturedProductsComponent from '#/components/FeaturedProductsComponent';
 
 export default function Sidebar() {
     return (
@@ -8,16 +9,20 @@ export default function Sidebar() {
             <p className="py-4 text-sm text-slate-200">Components:</p>
 
             <ul className="w-full text-gray-100 space-y-4">
-                <li className="w-full">
+                <li>
                     <TextComponent />
                 </li>
                 
-                <li className="w-full">
+                <li>
                     <ProductListComponent />
                 </li>
 
-                <li className="w-full">
+                <li>
                     <ImageComponent />
+                </li>
+
+                <li>
+                    <FeaturedProductsComponent />
                 </li>
             </ul>
         </div>

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import DraggableComponent from '#/components/DraggableComponent';
 import { GalleryHorizontalIcon } from 'lucide-react';

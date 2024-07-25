@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { useLayoutElementsStore } from '#/stores/useLayoutElementsStore';
 import { registeredComponents } from '#/helper/componentRegistry';
 
@@ -14,7 +15,9 @@ export default function LayoutPreview() {
                 const Component = registeredComponents[layout.type];
 
                 if (!Component) {
-                    throw new Error('unhandle block component type: ' + layout.type);
+                    const errorMessage = `unhandle block component type: ${layout.type}`;
+                    toast.error(errorMessage);
+                    throw new Error(errorMessage);
                 }
 
                 // HACK: use any to prevent typescript yell, change to correct type if find solution.

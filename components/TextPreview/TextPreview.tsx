@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
 import { cn } from '#/lib/utils';
@@ -50,7 +51,7 @@ export default function TextPreview({ id, type, content }: Props) {
             return;
         }
 
-        updateLayoutElementById(id, input.value);
+        updateLayoutElementById(id, input.value || 'Default Text');
         selectLayoutElement(null);
     };
 
@@ -92,7 +93,7 @@ export default function TextPreview({ id, type, content }: Props) {
 
                         <div>
                             <Label className="block mb-1.5" htmlFor="content">Content</Label>
-                            <Input id="content" defaultValue={content} ref={inputRef} />
+                            <Input id="content" defaultValue={content} ref={inputRef} autoComplete="off" />
                         </div>
                     </div>
 

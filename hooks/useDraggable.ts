@@ -1,6 +1,7 @@
 import type { MutableRefObject } from 'react';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
@@ -23,6 +24,8 @@ export default function useDraggable({
         const element = ref.current;
 
         if (!element) {
+            const errorMessage = 'element not found !!';
+            toast.error(errorMessage);
             throw new Error('element not found !!!')
         }
 

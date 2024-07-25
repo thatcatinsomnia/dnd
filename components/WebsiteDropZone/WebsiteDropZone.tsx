@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect, useRef } from 'react';
@@ -123,7 +123,7 @@ export default function WebsiteDropzone() {
             className={cn(
                 "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 transition bg-white shadow-sm", 
                 {
-                    'bg-blue-300': dropState.type === 'is-dropzone-over'
+                    'bg-blue-200': dropState.type === 'is-dropzone-over'
                 }
             )} 
         >

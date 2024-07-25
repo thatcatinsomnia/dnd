@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { TypeIcon } from 'lucide-react';
 import DraggableComponent from '#/components/DraggableComponent';

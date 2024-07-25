@@ -1,7 +1,8 @@
-import { MutableRefObject } from 'react';
+import type { MutableRefObject } from 'react';
 import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 
@@ -22,7 +23,9 @@ export default function useDropTarget({
         const element = ref.current;
         
         if (!element) {
-            throw new Error('element not found!!');
+            const errorMessage = 'element not found !!';
+            toast.error(errorMessage);
+            throw new Error(errorMessage);
         }
 
         const cleanup = dropTargetForElements({
@@ -66,3 +69,4 @@ export default function useDropTarget({
 
     return { dropState };
 }
+

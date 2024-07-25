@@ -1,42 +1,77 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
+import Image from 'next/image';
 import { cn } from '#/lib/utils';
-import { SnailIcon } from 'lucide-react';
-import { selectLayoutElement, useLayoutElementsStore, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
+import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
-import DropIndicator from '#/components/DropIndicator';
-import PreviewWrapper from '#/components/PreviewWrapper';
 import { Sheet, SheetContent, SheetTitle, SheetHeader, SheetDescription } from '#/components/ui/sheet';
 import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 import { Textarea } from '#/components/ui/textarea';
+import { AspectRatio } from '#/components/ui/aspect-ratio';
+import PreviewWrapper from '#/components/PreviewWrapper';
+import DropIndicator from '#/components/DropIndicator';
+import placeholderImage from '/public/placeholder.svg';
 
-// TODO: set content to correct type
-export type Props = Extract<LayoutElement, { type: 'product-list' }>;
-
-const PRODUCT_TEMP_SIZE = 10;
+type Props = Extract<LayoutElement, { type: 'featured-products' }>;
+type ProductData = ReturnType<typeof generateProducts>[number];
 
 function generateProducts(content: Props['content']) {
     if (content.length === 0) {
-        return Array.from({ length: PRODUCT_TEMP_SIZE }).map((_, i) => ({
-            id: `product-${i + 1}`,
-            name: `Product-${i + 1}`,
-            image: '/product-placeholder.svg',
-            price: 999
+        return Array.from({ length: 5 }).map((_, i) => ({
+            id: `product-${i}`,
+            name: i === 0 ? `Featured Product` : `Product-${i}`,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque a, maiores quidem similique ipsam quasi! Alias eos dolorum vitae sapiente eveniet in architecto numquam id',
+            image: placeholderImage,
+            price: i === 0 ? 9999 : 999
         }));
     }
 
     return content.map(p => ({
         id: p.id,
         name: p.id,
-        image: '/product-placeholder.svg',
+        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque a, maiores quidem similique ipsam quasi! Alias eos dolorum vitae sapiente eveniet in architecto numquam id',
+        image: placeholderImage,
         price: 999
     }));
 }
 
-export default function ProductListPreview({ id, type, content }: Props) {
-    const ref = useRef(null);
+function ProductPreview({ 
+    product,
+    isFeatured = false,
+    className
+}: { 
+    product: ProductData;
+    isFeatured?: boolean;
+    className?: string;
+}) {
+    return (
+        <div className={cn("flex flex-col border border-gray-300 rounded shadow-sm overflow-hidden", className)}>
+            <AspectRatio>
+                <Image 
+                    className="object-cover pointer-events-none"
+                    src={placeholderImage}
+                    alt="product-4 placeholder" 
+                />
+            </AspectRatio>
+
+            <div className="p-2 flex-1 flex flex-col justify-between bg-white">
+                <h3 className="mb-4 text-gray-600 font-bold text-lg">{product.name}</h3>
+                {isFeatured && (
+                    <p className="mb-4 text-gray-500">{product.description}</p>
+                )}
+                <span className="mt-auto text-red-500 text-xl">
+                    <small className="text-sm">$</small>
+                    {product.price}
+                </span>
+            </div>
+        </div>
+    );
+}
+
+export default function FeaturedProductPreview({ id, type, content }: Props) {
+    const ref = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const selectedId = useLayoutElementsStore(state => state.selectedId);
     const isSelected = selectedId === id;
@@ -78,32 +113,37 @@ export default function ProductListPreview({ id, type, content }: Props) {
 
         updateLayoutElementById(id, productIdData);
         selectLayoutElement(null);
+
     };
 
     const products = generateProducts(content);
+    const featured = products[0];
+    const otherProducts = products.slice(1, 5); // ignore other products after fifth 
 
     return (
         <>
             <PreviewWrapper layoutId={id}>
                 <div 
-                    ref={ref}
                     className={cn(
-                        "py-4 flex gap-4 overflow-y-hidden",
+                        "py-2 grid grid-cols-8 grid-rows-2 gap-6",
                         {
                             'opacity-30': dragState.type === 'is-dragging'
                         }
                     )}
+                    ref={ref}
                 >
-                    {products.map(p => (
-                        <div key={p.id} className="w-48 flex-shrink-0 text-gray-600 bg-white border border-slate-200 shadow-sm rounded overflow-hidden">
-                            <div className="w-full size-48 grid place-items-center bg-slate-700/50">
-                                <SnailIcon className="text-gray-300 size-8" />
-                            </div>
-                            <div className="p-2">
-                                <h3 className="pb-4 text-lg font-bold">{p.name}</h3>
-                                <span className="text-lg text-red-500">${p.price}</span>
-                            </div>
-                        </div>
+                    <ProductPreview
+                        className="col-span-4 row-span-2"
+                        product={featured} 
+                        isFeatured 
+                    />
+
+                    {otherProducts.map(p => (
+                        <ProductPreview 
+                            key={p.id} 
+                            className="col-span-2 bg-blue-500"
+                            product={p}
+                        />
                     ))}
                 </div>
 
@@ -111,14 +151,13 @@ export default function ProductListPreview({ id, type, content }: Props) {
                     <DropIndicator edge={dropState.closestEdge} />
                 )}
             </PreviewWrapper>
-
             <Sheet
                 open={isSelected}
                 onOpenChange={handleOpenChange}
             >
                 <SheetContent>
                     <SheetHeader>
-                        <SheetTitle>Edit Product List Component</SheetTitle>
+                        <SheetTitle>Edit Featured Products Component</SheetTitle>
                         <SheetDescription>make changes to your text component here. click save when you're done.</SheetDescription>
                     </SheetHeader>
                     
@@ -131,6 +170,7 @@ export default function ProductListPreview({ id, type, content }: Props) {
                         <div>
                             <Label className="block mb-1.5" htmlFor="content">Product Id List</Label>
                             <Textarea 
+                                id="content"
                                 className="min-h-[140px]" 
                                 defaultValue={content.map(data => data.id).join(', ')}
                                 ref={textareaRef}

@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 
+type Product = {
+    id: string | number;
+};
+
 export type LayoutElement = 
     | {
         id: string | number;
@@ -9,18 +13,21 @@ export type LayoutElement =
     | {
         id: string | number;
         type: 'product-list';
-        content: {
-            id: string | number;
-        }[];
+        content: Product[];
       }
     | {
         id: string | number;
-        type: 'image'
+        type: 'image';
         content: {
             alt: string;
             src: string;
         }
       }
+    | {
+        id: string | number;
+        type: 'featured-products';
+        content: Product[];
+    }
 
 type LayoutElementsStore = {
     elements: LayoutElement[];

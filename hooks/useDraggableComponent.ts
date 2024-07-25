@@ -1,6 +1,7 @@
 import type { RefObject } from 'react';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
@@ -48,7 +49,17 @@ function generateInitialData(type: LayoutElement['type']): LayoutElement {
         }
     }
 
-    throw Error(`unhandle component initial data: "${type}"`);
+    if (type === 'featured-products') {
+        return {
+            id,
+            type,
+            content: []
+        };
+    }
+
+    const errorMessage = `unhandle component initial data: "${type}"`;
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
 }
 
 const useDraggableComponent = ({ 
@@ -62,7 +73,9 @@ const useDraggableComponent = ({
         const element = ref?.current;
 
         if (!element) {
-            throw Error('useDraggableComponent must provide ref');
+            const errorMessage = 'useDraggableComponent must provide ref';
+            toast.error(errorMessage);
+            throw new Error(errorMessage);
         }
 
         const cleanup = draggable({ 
