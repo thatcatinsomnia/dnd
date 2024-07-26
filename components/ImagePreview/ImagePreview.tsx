@@ -89,7 +89,7 @@ export default function ImagePreview({ id, type, content }: Props) {
                 <SheetContent>
                     <SheetHeader>
                         <SheetTitle>Edit Text Component</SheetTitle>
-                        <SheetDescription>make changes to your text component here. click save when you're done.</SheetDescription>
+                        <SheetDescription>make changes to your text component here. click save when you&apos;re done.</SheetDescription>
                     </SheetHeader>
                     
                     <div className="py-6 grid gap-8">
