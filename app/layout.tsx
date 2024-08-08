@@ -7,28 +7,28 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Drag and Drop",
-  description: "drag and drop block builder",
+    title: "Drag and Drop",
+    description: "drag and drop block builder",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    // add suppressHydrationWarning to prevent warning on browser
-    <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-            >
-                {children}
-                <Toaster richColors />
-            </ThemeProvider>
-        </body>
-    </html>
-  );
+    return (
+        // add suppressHydrationWarning to prevent warning on browser
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                >
+                    {children}
+                    <Toaster richColors />
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }
