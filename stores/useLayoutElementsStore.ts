@@ -1,22 +1,22 @@
 import { create } from 'zustand';
 
 type Product = {
-    id: string | number;
+    id: string;
 };
 
 export type LayoutElement = 
     | {
-        id: string | number;
+        id: string;
         type: 'text';
         content: string;
       }
     | {
-        id: string | number;
+        id: string;
         type: 'product-list';
         content: Product[];
       }
     | {
-        id: string | number;
+        id: string;
         type: 'image';
         content: {
             alt: string;
@@ -24,10 +24,10 @@ export type LayoutElement =
         }
       }
     | {
-        id: string | number;
+        id: string;
         type: 'featured-products';
         content: Product[];
-    }
+      };
 
 type LayoutElementsStore = {
     elements: LayoutElement[];
@@ -49,7 +49,7 @@ export function setLayoutElements(layoutElements: LayoutElement[]) {
     }));
 }
 
-export function selectLayoutElement(id: string | number | null) {
+export function selectLayoutElement(id: string | null) {
     useLayoutElementsStore.setState(state => ({
         selectedId: id
     }));
@@ -83,14 +83,10 @@ export function reorderLayoutElements({ sourceIndex, targetIndex }: {
     targetIndex: number;
 }) {
     useLayoutElementsStore.setState(state => {
-        console.log({ elements: state.elements });
-
         const cloned = [...state.elements];
 
         const [moved] = cloned.splice(sourceIndex, 1);
         cloned.splice(targetIndex, 0, moved);
-
-        console.log({ elements: cloned });
 
         return {
             elements: cloned
@@ -119,4 +115,3 @@ export function updateLayoutElementById<T extends LayoutElement['type']>(
         };
     });
 }
-

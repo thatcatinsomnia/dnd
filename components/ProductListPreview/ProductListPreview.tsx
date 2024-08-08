@@ -1,7 +1,5 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
-import { cn } from '#/lib/utils';
-import { SnailIcon } from 'lucide-react';
 import { selectLayoutElement, useLayoutElementsStore, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
@@ -11,29 +9,10 @@ import { Sheet, SheetContent, SheetTitle, SheetHeader, SheetDescription } from '
 import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 import { Textarea } from '#/components/ui/textarea';
+import ProductListPrimitive from '../ProductListPrimitive';
 
-// TODO: set content to correct type
+// ? how to set correct type 
 export type Props = Extract<LayoutElement, { type: 'product-list' }>;
-
-const PRODUCT_TEMP_SIZE = 10;
-
-function generateProducts(content: Props['content']) {
-    if (content.length === 0) {
-        return Array.from({ length: PRODUCT_TEMP_SIZE }).map((_, i) => ({
-            id: `product-${i + 1}`,
-            name: `Product-${i + 1}`,
-            image: '/product-placeholder.svg',
-            price: 999
-        }));
-    }
-
-    return content.map(p => ({
-        id: p.id,
-        name: p.id,
-        image: '/product-placeholder.svg',
-        price: 999
-    }));
-}
 
 export default function ProductListPreview({ id, type, content }: Props) {
     const ref = useRef(null);
@@ -80,32 +59,14 @@ export default function ProductListPreview({ id, type, content }: Props) {
         selectLayoutElement(null);
     };
 
-    const products = generateProducts(content);
-
     return (
         <>
-            <PreviewWrapper layoutId={id}>
-                <div 
-                    ref={ref}
-                    className={cn(
-                        "py-4 flex gap-4 overflow-y-hidden",
-                        {
-                            'opacity-30': dragState.type === 'is-dragging'
-                        }
-                    )}
-                >
-                    {products.map(p => (
-                        <div key={p.id} className="w-48 flex-shrink-0 text-gray-600 bg-white border border-slate-200 shadow-sm rounded overflow-hidden">
-                            <div className="w-full size-48 grid place-items-center bg-slate-700/50">
-                                <SnailIcon className="text-gray-300 size-8" />
-                            </div>
-                            <div className="p-2">
-                                <h3 className="pb-4 text-lg font-bold">{p.name}</h3>
-                                <span className="text-lg text-red-500">${p.price}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+            <PreviewWrapper 
+                ref={ref}
+                layoutId={id}
+                className={dragState.type === 'is-dragging' ? 'opacity-30' : ''}
+            >
+                <ProductListPrimitive content={content} />
 
                 {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
                     <DropIndicator edge={dropState.closestEdge} />
@@ -146,4 +107,3 @@ export default function ProductListPreview({ id, type, content }: Props) {
         </>
     );
 }
-

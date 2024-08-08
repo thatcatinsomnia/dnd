@@ -1,18 +1,17 @@
-import type { ChangeEvent } from 'react';
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
-import { cn } from '#/lib/utils';
 import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
 import DropIndicator from '#/components/DropIndicator';
 import PreviewWrapper from '#/components/PreviewWrapper';
+import TextPrimitive from '#/components/TextPrimitive';
 import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetContent } from '#/components/ui/sheet';
 import { Input } from '#/components/ui/input';
 import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 
-export type Props = Extract<LayoutElement, { type: 'text' }>;
+type Props = Extract<LayoutElement, { type: 'text' }>;
 
 export default function TextPreview({ id, type, content }: Props) {
     const ref = useRef<HTMLParagraphElement>(null);
@@ -57,18 +56,11 @@ export default function TextPreview({ id, type, content }: Props) {
 
     return (
         <>
-            <PreviewWrapper layoutId={id}>
-                <p 
-                    ref={ref}
-                    className={cn(
-                        "p-1 bg-white text-gray-700 relative", 
-                        {
-                            'opacity-30': dragState.type === 'is-dragging'
-                        }
-                    )}
-                >
-                    {content}
-                </p>
+            <PreviewWrapper 
+              layoutId={id} ref={ref}
+              className={dragState.type === 'is-dragging' ? 'opacity-30' : ''}
+            >
+                <TextPrimitive content={content} />
 
                 {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
                     <DropIndicator edge={dropState.closestEdge} />
@@ -105,4 +97,3 @@ export default function TextPreview({ id, type, content }: Props) {
         </>
     );
 }
-

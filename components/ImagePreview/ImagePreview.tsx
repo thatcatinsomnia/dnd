@@ -1,15 +1,13 @@
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
 import { useRef } from 'react';
-import Image from 'next/image';
-import { cn } from '#/lib/utils';
 import { useLayoutElementsStore, selectLayoutElement, updateLayoutElementById } from '#/stores/useLayoutElementsStore';
 import useDraggable from '#/hooks/useDraggable';
 import useDropTarget from '#/hooks/useDropTarget';
+import ImagePrimitive from '#/components/ImagePrimitive';
 import { Label } from '#/components/ui/label';
 import { Button } from '#/components/ui/button';
 import { Input } from '#/components/ui/input';
 import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetContent } from '#/components/ui/sheet';
-import { AspectRatio } from '#/components/ui/aspect-ratio';
 import PreviewWrapper from '#/components/PreviewWrapper';
 import DropIndicator from '#/components/DropIndicator';
 
@@ -17,9 +15,7 @@ type Props = Extract<LayoutElement, { type: 'image' }>;
 
 export default function ImagePreview({ id, type, content }: Props) {
     const { src, alt } = content;
-    const hasSource = src.length > 0;
-    const hasAltText = alt.length > 0;
-    
+
     const selectedId = useLayoutElementsStore(state => state.selectedId);
     const isSelected = selectedId === id;
 
@@ -27,16 +23,23 @@ export default function ImagePreview({ id, type, content }: Props) {
     const srcInputRef = useRef<HTMLInputElement>(null);
     const altInputRef = useRef<HTMLInputElement>(null);
 
-    const data = { id, type, content };
-
     const { dragState } = useDraggable({
         ref,
-        initialData: data
+        initialData: {
+            id,
+            type,
+            content
+        }
     });
+
 
     const { dropState } = useDropTarget({
         ref,
-        data 
+        data: {
+            id,
+            type,
+            content
+        }
     });
 
     const handleOpenChange = (open: boolean) => {
@@ -59,23 +62,12 @@ export default function ImagePreview({ id, type, content }: Props) {
 
     return (
         <>
-            <PreviewWrapper layoutId={id}>
-                <AspectRatio 
-                    ratio={16 / 9} 
-                    ref={ref}
-                    className={cn(
-                        {
-                            'opacity-30': dragState.type === 'is-dragging'
-                        }
-                    )}
-                >
-                    <Image 
-                        className="object-cover rounded pointer-events-none"
-                        src={hasSource ? src : '/placeholder.svg'} 
-                        alt={hasAltText ? alt : 'image placeholder'} 
-                        fill
-                    />
-                </AspectRatio>
+            <PreviewWrapper 
+                layoutId={id} 
+                ref={ref}
+                className={dragState.type === 'is-dragging' ? 'opacity-30' : ''}
+            >
+                <ImagePrimitive src={content.src} alt={content.alt} />
 
                 {dropState.type === 'is-dragging-over' && dropState.closestEdge && (
                     <DropIndicator edge={dropState.closestEdge} />
@@ -117,4 +109,3 @@ export default function ImagePreview({ id, type, content }: Props) {
         </>
     );
 }
-

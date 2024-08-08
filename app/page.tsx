@@ -6,7 +6,7 @@ export default function Home() {
     <div className="pl-72 h-dvh">
         <Sidebar />
 
-        <div className="p-12">
+        <div className="p-8">
             <WebsiteDropzone />        
         </div>
     </div>

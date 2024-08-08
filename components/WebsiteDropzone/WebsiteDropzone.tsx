@@ -1,10 +1,13 @@
 "use client";
 
 import type { LayoutElement } from '#/stores/useLayoutElementsStore';
+import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { autoScrollWindowForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { SaveIcon, EyeIcon } from 'lucide-react';
 import { cn } from '#/lib/utils'; 
 import { useLayoutElementsStore, pushNewLayoutElement, insertNewLayoutElmement, reorderLayoutElements } from '#/stores/useLayoutElementsStore';
 import LayoutPreview from '#/components/LayoutPreview';
@@ -48,8 +51,8 @@ export default function WebsiteDropzone() {
             // source: the element drag
             // location the element for drop
             onDrag: ({ source, location }) => {
-                // console.log({location});
             },
+
             // handle drop
             // 1. remove element from original position
             // 2. move to new position
@@ -110,31 +113,60 @@ export default function WebsiteDropzone() {
                     return;
                 }
 
-                console.log('other case not handle...');
+                console.log('other case not handle yet');
             }
         });
 
         return () => cleanup();
     }, [layoutElements]);
 
-    return (
-        <div
-            ref={ref} 
-            className={cn(
-                "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 transition bg-white shadow-sm", 
-                {
-                    'bg-blue-200': dropState.type === 'is-dropzone-over'
-                }
-            )} 
-        >
-            {layoutElements.length === 0 && (
-                <div className="h-64 grid place-items-center text-slate-600/60">
-                    {dropState.type === 'idle' && <p className="text-center">Drop Componnets Here</p>}
-                </div>
-            )}
+    const handleSave = () => {
+        localStorage.setItem('layout', JSON.stringify(layoutElements));
 
-            <LayoutPreview />
-        </div>
+        toast.success('Layout data saved');
+    };
+
+    return (
+        <>
+            <div className="flex items-center justify-end gap-2">
+                <Link href="/preview-layout">
+                    <button 
+                        className="mb-2 px-4 py-1 flex items-center gap-1 text-sm bg-teal-600 hover:bg-teal-700 rounded transition-colors"
+                    >
+                        <EyeIcon size={16} />
+                        Preview 
+                    </button>
+                </Link>
+
+                <button 
+                    className="mb-2 px-4 py-1 flex items-center gap-1 text-sm bg-slate-600 hover:bg-slate-700 rounded transition-colors"
+                    onClick={handleSave}
+                >
+                    <SaveIcon size={16} />
+                    Save
+                </button>
+            </div>
+
+            <div
+                ref={ref} 
+                className={cn(
+                    "ml-72 relative mx-auto max-w-7xl p-4 min-h-64 transition bg-white shadow-sm", 
+                    {
+                        'bg-blue-200': dropState.type === 'is-dropzone-over'
+                    }
+                )} 
+            >
+                {layoutElements.length === 0 && (
+                    <div className="h-64 grid place-items-center text-slate-600/60">
+                        {dropState.type === 'idle' && <p className="text-center">Drop Componnets Here</p>}
+                    </div>
+                )}
+
+                <LayoutPreview 
+                    layout={layoutElements} 
+                    isDraggable 
+                />
+            </div>
+        </>
     );
 }
-
